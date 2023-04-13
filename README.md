@@ -1,1 +1,2 @@
-# openai_proxy
+# OpenAI API proxy
+API calls simplification service

@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  
+  file_sever:
+    build: server
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      # - ./data/files:/files
+      # - /etc/letsencrypt/live/langtea.club/fullchain.pem:/ssl/cert.pem
+      # - /etc/letsencrypt/live/langtea.club/privkey.pem:/ssl/key.pem
+    restart: always
+    ports:
+      - 4714:4714
+    environment:
+      - TZ=Europe/Moscow
+      - PORT=4714
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
