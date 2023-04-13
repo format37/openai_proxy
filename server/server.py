@@ -15,11 +15,11 @@ def test_handler():
     return jsonify({"test": "OK"})
 
 
-def text_chat_gpt(prompt, api_key=""):
+def text_chat_gpt(api_key, model, prompt):
     try:
         openai.api_key = api_key
         answer = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model=model,
             messages=prompt
         )
     except Exception as e:
@@ -32,8 +32,9 @@ def request_handler():
     data = request.get_json()
     logger.info("Received request: %s", data)
     api_key = data['api_key']
+    model = data['model']
     prompt = data['prompt']
-    openai_response = text_chat_gpt(prompt, api_key)
+    openai_response = text_chat_gpt(api_key, model, prompt)
     return openai_response
 
 

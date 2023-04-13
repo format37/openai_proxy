@@ -8,7 +8,8 @@ def send_request(user_text):
         {"role": "user", "content": user_text}
     ]
     request_data = {
-        "api_key": "YOUR_KEY",
+        "api_key": input('Please, input your Openai API key:'),
+        "model": "gpt-3.5-turbo",
         "prompt": prompt
     }
 
