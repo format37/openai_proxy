@@ -9,7 +9,7 @@ docker-compose up --build -d
 # Using
 Obtain you key at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
 ```
-python client/call.py
+python3 client/call.py
 ```
 Output:
 ```
