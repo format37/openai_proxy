@@ -29,7 +29,8 @@ def text_chat_gpt(api_key, model, prompt):
 
 @app.route("/request", methods=["POST"])
 def request_handler():
-    data = request.get_json()
+    # Forces the parsing of JSON data, even if the content type header is not set
+    data = request.get_json(force=True)
     logger.info("Received request: %s", data)
     api_key = data['api_key']
     model = data['model']
