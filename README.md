@@ -2,7 +2,7 @@
 API proxy
 # Installation
 ```
-gid clone https://github.com/format37/openai_proxy.git
+git clone https://github.com/format37/openai_proxy.git
 cd openai_proxy
 docker-compose up --build -d
 ```
