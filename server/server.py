@@ -37,7 +37,7 @@ def request_handler():
     model = data['model']
     prompt = data['prompt']
     try:
-        temperature = data['temperature']
+        temperature = float(data['temperature'])
     except KeyError:
         temperature = 0.9
     openai_response = text_chat_gpt(api_key, model, prompt, temperature)
