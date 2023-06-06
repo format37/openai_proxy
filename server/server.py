@@ -15,12 +15,13 @@ def test_handler():
     return jsonify({"test": "OK"})
 
 
-def text_chat_gpt(api_key, model, prompt):
+def text_chat_gpt(api_key, model, prompt, temperature=0.9):
     try:
         openai.api_key = api_key
         answer = openai.ChatCompletion.create(
             model=model,
-            messages=prompt
+            messages=prompt,
+            temperature=temperature
         )
     except Exception as e:
         answer = str(e)
@@ -35,7 +36,11 @@ def request_handler():
     api_key = data['api_key']
     model = data['model']
     prompt = data['prompt']
-    openai_response = text_chat_gpt(api_key, model, prompt)
+    try:
+        temperature = data['temperature']
+    except KeyError:
+        temperature = 0.9
+    openai_response = text_chat_gpt(api_key, model, prompt, temperature)
     return openai_response
 
 
