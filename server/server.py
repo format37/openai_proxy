@@ -30,17 +30,22 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
 
 @app.route("/request", methods=["POST"])
 def request_handler():
-    # Forces the parsing of JSON data, even if the content type header is not set
-    data = request.get_json(force=True)
-    logger.info("Received request: %s", data)
-    api_key = data['api_key']
-    model = data['model']
-    prompt = data['prompt']
+    logger.info("Received request: "+str(request))
     try:
-        temperature = float(data['temperature'])
-    except KeyError:
-        temperature = 0.9
-    openai_response = text_chat_gpt(api_key, model, prompt, temperature)
+        # Forces the parsing of JSON data, even if the content type header is not set
+        data = request.get_json(force=True)
+        logger.info("Received request: %s", data)
+        api_key = data['api_key']
+        model = data['model']
+        prompt = data['prompt']
+        try:
+            temperature = float(data['temperature'])
+        except KeyError:
+            temperature = 0.9
+        openai_response = text_chat_gpt(api_key, model, prompt, temperature)
+    except Exception as e:
+        logger.error(e)
+        openai_response = str(e)
     return openai_response
 
 
