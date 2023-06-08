@@ -21,7 +21,8 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
         answer = openai.ChatCompletion.create(
             model=model,
             messages=prompt,
-            temperature=temperature
+            temperature=temperature,
+            max_tokens=4096
         )
     except Exception as e:
         answer = str(e)
