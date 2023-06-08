@@ -22,7 +22,7 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
             model=model,
             messages=prompt,
             temperature=temperature,
-            max_tokens=8192
+            max_tokens=2048
         )
     except Exception as e:
         answer = str(e)
