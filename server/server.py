@@ -45,7 +45,7 @@ def token_counter_handler():
 
 @app.route("/request", methods=["POST"])
 def request_handler():
-    logger.info("Received request: %s", data)
+    # logger.info("Received request: "+str(request))
     try:
         # Forces the parsing of JSON data, even if the content type header is not set
         data = request.get_json(force=True)
