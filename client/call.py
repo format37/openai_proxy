@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 def token_counter(text, model):
@@ -23,9 +24,11 @@ def send_request(user_text, model):
         "model": model,
         "prompt": prompt
     }
+    # Json dumps prompt
+    prompt_dumped = json.dumps(prompt)
     print(
         'Token count forecast:', 
-        token_counter(str({"role": "user", "content": user_text}), model).json()['tokens']
+        token_counter(prompt_dumped, model).json()['tokens']
         )
     response = requests.post(url, json=request_data)
     return response
