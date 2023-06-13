@@ -23,7 +23,7 @@ def send_request(user_text, model):
         "model": model,
         "prompt": prompt
     }
-
+    print('Token count forecast:', token_counter(request_data, model).json()['tokens'])
     response = requests.post(url, json=request_data)
     return response
 
@@ -31,7 +31,6 @@ def send_request(user_text, model):
 def main():
     model = 'gpt-3.5-turbo'
     user_text = 'The capital of Britain'
-    print('Token count forecast:', token_counter(user_text, model).json()['tokens'])
     response = send_request(user_text, model)
     print("Status code:", response.status_code)
 
