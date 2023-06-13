@@ -1,7 +1,18 @@
 import requests
 
 
-def send_request(user_text):
+def token_counter(text, model):
+    url = 'http://localhost:4714/token_counter'
+    request_data = {
+        "text": text,
+        "model": model
+    }
+
+    response = requests.post(url, json=request_data)
+    return response
+
+
+def send_request(user_text, model):
     url = 'http://localhost:4714/request'
     prompt = [
         {"role": "system", "content": "You are a helpful assistant."},
@@ -9,7 +20,7 @@ def send_request(user_text):
     ]
     request_data = {
         "api_key": input('Please, input your Openai API key:'),
-        "model": "gpt-3.5-turbo",
+        "model": model,
         "prompt": prompt
     }
 
@@ -18,9 +29,10 @@ def send_request(user_text):
 
 
 def main():
+    model = 'gpt-3.5-turbo'
     user_text = 'The capital of Britain'
-    response = send_request(user_text)
-
+    print('Token count forecast:', token_counter(user_text, model).json()['tokens'])
+    response = send_request(user_text, model)
     print("Status code:", response.status_code)
 
     try:
