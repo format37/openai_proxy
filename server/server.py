@@ -2,6 +2,7 @@ import os
 import logging
 from flask import Flask, request, jsonify
 import openai
+import tiktoken
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,10 +29,23 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
         answer = str(e)
     return answer
 
+# Token counter endpoint
+@app.route("/token_counter", methods=["POST"])
+def token_counter_handler():
+    # Extract text from request
+    data = request.get_json(force=True)
+    logger.info("Received request: %s", data)
+    text = data['text']
+    model = data['model'] # "gpt-4"
+    # To get the tokeniser corresponding to a specific model in the OpenAI API:
+    enc = tiktoken.encoding_for_model(model)
+    tokens = enc.encode(text)
+    return jsonify({"tokens": len(tokens)})
+
 
 @app.route("/request", methods=["POST"])
 def request_handler():
-    logger.info("Received request: "+str(request))
+    logger.info("Received request: %s", data)
     try:
         # Forces the parsing of JSON data, even if the content type header is not set
         data = request.get_json(force=True)
