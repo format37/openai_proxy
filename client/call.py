@@ -23,7 +23,10 @@ def send_request(user_text, model):
         "model": model,
         "prompt": prompt
     }
-    print('Token count forecast:', token_counter(str(prompt), model).json()['tokens'])
+    print(
+        'Token count forecast:', 
+        token_counter(str(user_text+" You are a helpful assistant."), model).json()['tokens']
+        )
     response = requests.post(url, json=request_data)
     return response
 
