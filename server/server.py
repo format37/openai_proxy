@@ -54,11 +54,15 @@ def request_handler():
         
         # Debug ++
         # Create folder logs if not exists
+        logger.info("Creating folder logs if not exists")
         if not os.path.exists('logs'):
             os.makedirs('logs')
+            logger.info("Folder logs created")
         # Save date in a pickle file
         with open('logs/'+str(datetime.datetime.now())+'.pickle', 'wb') as f:
+            logger.info("Saving data in pickle file")
             pickle.dump(data, f)
+            logger.info("Data saved in pickle file")
         # Debug --
 
         logger.info("Received request: %s", data)
