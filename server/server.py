@@ -3,6 +3,8 @@ import logging
 from flask import Flask, request, jsonify
 import openai
 import tiktoken
+import pickle
+import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,8 +24,8 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
         answer = openai.ChatCompletion.create(
             model=model,
             messages=prompt,
-            temperature=temperature,
-            max_tokens=2048
+            temperature=temperature
+            # max_tokens=2048
         )
     except Exception as e:
         answer = str(e)
@@ -36,7 +38,7 @@ def token_counter_handler():
     data = request.get_json(force=True)
     logger.info("Received request: %s", data)
     text = data['text']
-    model = data['model'] # "gpt-4"
+    model = data['model']
     # To get the tokeniser corresponding to a specific model in the OpenAI API:
     enc = tiktoken.encoding_for_model(model)
     tokens = enc.encode(text)
@@ -49,6 +51,16 @@ def request_handler():
     try:
         # Forces the parsing of JSON data, even if the content type header is not set
         data = request.get_json(force=True)
+        
+        # Debug ++
+        # Create folder logs if not exists
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
+        # Save date in a pickle file
+        with open('logs/'+str(datetime.datetime.now())+'.pickle', 'wb') as f:
+            pickle.dump(data, f)
+        # Debug --
+
         logger.info("Received request: %s", data)
         api_key = data['api_key']
         model = data['model']
@@ -56,7 +68,7 @@ def request_handler():
         try:
             temperature = float(data['temperature'])
         except KeyError:
-            temperature = 0.9
+            temperature = 0.5
         openai_response = text_chat_gpt(api_key, model, prompt, temperature)
     except Exception as e:
         logger.error(e)
