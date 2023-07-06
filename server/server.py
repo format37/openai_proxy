@@ -34,6 +34,7 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
 # Token counter endpoint
 @app.route("/token_counter", methods=["POST"])
 def token_counter_handler():
+    logger.info("Received token_counter request: "+str(request))
     # Extract text from request
     data = request.get_json(force=True)
     logger.info("Received request: %s", data)
@@ -47,14 +48,14 @@ def token_counter_handler():
 
 @app.route("/request", methods=["POST"])
 def request_handler():
-    # logger.info("Received request: "+str(request))
+    logger.info("Received request: "+str(request))
     try:
         # Forces the parsing of JSON data, even if the content type header is not set
         data = request.get_json(force=True)
         
         # Debug ++
         # Create folder logs if not exists
-        logger.info("Creating folder logs if not exists")
+        """logger.info("Creating folder logs if not exists")
         if not os.path.exists('logs'):
             os.makedirs('logs')
             logger.info("Folder logs created")
@@ -62,7 +63,7 @@ def request_handler():
         with open('logs/'+str(datetime.datetime.now())+'.pickle', 'wb') as f:
             logger.info("Saving data in pickle file")
             pickle.dump(data, f)
-            logger.info("Data saved in pickle file")
+            logger.info("Data saved in pickle file")"""
         # Debug --
 
         logger.info("Received request: %s", data)
