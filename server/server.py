@@ -34,10 +34,10 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
 # Token counter endpoint
 @app.route("/token_counter", methods=["POST"])
 def token_counter_handler():
-    logger.info("Received token_counter request: "+str(request))
+    # logger.info("Received token_counter request: "+str(request))
     # Extract text from request
     data = request.get_json(force=True)
-    logger.info("Received request: %s", data)
+    logger.info("Received token_counter: %s", data)
     text = data['text']
     model = data['model']
     # To get the tokeniser corresponding to a specific model in the OpenAI API:
@@ -48,7 +48,6 @@ def token_counter_handler():
 
 @app.route("/request", methods=["POST"])
 def request_handler():
-    logger.info("Received request: "+str(request))
     try:
         # Forces the parsing of JSON data, even if the content type header is not set
         data = request.get_json(force=True)
