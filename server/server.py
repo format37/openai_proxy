@@ -20,6 +20,7 @@ def test_handler():
 
 def text_chat_gpt(api_key, model, prompt, temperature=0.9):
     try:
+        logger.info("Received text_chat_gpt request: %s", prompt)
         openai.api_key = api_key
         answer = openai.ChatCompletion.create(
             model=model,
@@ -27,6 +28,7 @@ def text_chat_gpt(api_key, model, prompt, temperature=0.9):
             temperature=temperature
             # max_tokens=2048
         )
+        logger.info("Answer: %s", answer)
     except Exception as e:
         answer = str(e)
     return answer
