@@ -1,94 +1,57 @@
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 import os
 import logging
-from flask import Flask, request, jsonify
 import openai
 import tiktoken
 import pickle
 import datetime
 
+app = FastAPI() 
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
-app = Flask(__name__)
+@app.get("/test")
+async def test_handler():
+    return {"test": "OK"}
 
-@app.route("/test", methods=["GET"])
-def test_handler():
-    logger.info("Received test request")
-    return jsonify({"test": "OK"})
-
+@app.post("/request")
+async def request_handler(request: Request):
+    data = await request.json()
+    
+    api_key = data['api_key']
+    model = data['model']
+    prompt = data['prompt']
+   
+    try:
+        temperature = float(data['temperature']) 
+    except KeyError:
+        temperature = 1
+        
+    response = text_chat_gpt(api_key, model, prompt, temperature)
+    return JSONResponse(content=response)
 
 def text_chat_gpt(api_key, model, prompt, temperature=0.9):
     try:
-        logger.info("Received text_chat_gpt request: %s", prompt)
         openai.api_key = api_key
-        answer = openai.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
             model=model,
             messages=prompt,
             temperature=temperature
-            # max_tokens=2048
         )
-        logger.info("Answer: %s", answer)
+        return response
+    
     except Exception as e:
-        answer = str(e)
-    return answer
+        return str(e)
 
-# Token counter endpoint
-@app.route("/token_counter", methods=["POST"])
-def token_counter_handler():
-    # logger.info("Received token_counter request: "+str(request))
-    # Extract text from request
-    data = request.get_json(force=True)
-    logger.info("Received token_counter: %s", data)
+@app.post("/token_counter")
+async def token_counter_handler(request: Request):
+    data = await request.json()
     text = data['text']
     model = data['model']
-    # To get the tokeniser corresponding to a specific model in the OpenAI API:
-    enc = tiktoken.encoding_for_model(model)
+    
+    enc = tiktoken.encoding_for_model(model) 
     tokens = enc.encode(text)
-    return jsonify({"tokens": len(tokens)})
-
-
-@app.route("/request", methods=["POST"])
-def request_handler():
-    try:
-        # Forces the parsing of JSON data, even if the content type header is not set
-        data = request.get_json(force=True)
-        
-        # Debug ++
-        # Create folder logs if not exists
-        """logger.info("Creating folder logs if not exists")
-        if not os.path.exists('logs'):
-            os.makedirs('logs')
-            logger.info("Folder logs created")
-        # Save date in a pickle file
-        with open('logs/'+str(datetime.datetime.now())+'.pickle', 'wb') as f:
-            logger.info("Saving data in pickle file")
-            pickle.dump(data, f)
-            logger.info("Data saved in pickle file")"""
-        # Debug --
-
-        logger.info("Received request: %s", data)
-        api_key = data['api_key']
-        model = data['model']
-        prompt = data['prompt']
-        try:
-            temperature = float(data['temperature'])
-        except KeyError:
-            temperature = 0.5
-        openai_response = text_chat_gpt(api_key, model, prompt, temperature)
-    except Exception as e:
-        logger.error(e)
-        openai_response = str(e)
-    return openai_response
-
-
-def main():
-    app.run(
-        host='0.0.0.0',
-        debug=False,
-        port=int(os.environ.get("PORT", 4714))
-    )
-
-
-if __name__ == "__main__":
-    main()
+    
+    return {"tokens": len(tokens)}

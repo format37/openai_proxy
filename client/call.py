@@ -4,12 +4,13 @@ import json
 
 def token_counter(text, model):
     url = 'http://localhost:4714/token_counter'
-    request_data = {
+    data = {
         "text": text,
         "model": model
     }
 
-    response = requests.post(url, json=request_data)
+    response = requests.post(url, json=data)
+    # response = requests.post(url, kwargs=data)
     return response
 
 
