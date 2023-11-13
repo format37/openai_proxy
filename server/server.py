@@ -2,7 +2,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import os
 import logging
-import openai
+# import openai
+from openai import OpenAI
 import tiktoken
 import pickle
 import datetime
@@ -32,15 +33,20 @@ async def request_handler(request: Request):
     response = text_chat_gpt(api_key, model, prompt, temperature)
     return JSONResponse(content=response)
 
-def text_chat_gpt(api_key, model, prompt, temperature=0.9):
+def text_chat_gpt(api_key, model, messages, temperature=0.9):
     try:
-        openai.api_key = api_key
+        """openai.api_key = api_key
         response = openai.ChatCompletion.create(
             model=model,
             messages=prompt,
             temperature=temperature
+        )"""
+        client = OpenAI(api_key=api_key)
+        chat_completion = client.chat.completions.create(
+            messages=messages,
+            model=model,
         )
-        return response
+        return chat_completion
     
     except Exception as e:
         return str(e)
