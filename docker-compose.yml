@@ -1,6 +1,7 @@
 version: '3.3'
 services:
-  file_sever:
+  server:
+    name: openai_proxy
     build: server
     deploy:
       mode: replicated
