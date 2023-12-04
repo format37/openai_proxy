@@ -55,6 +55,7 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
 @app.post("/token_counter")
 async def token_counter_handler(request: Request):
     data = await request.json()
+    logger.info(f"token_counter data: {data}")
     try:
         text = data['text']
         model = data['model']
