@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
-# import os
 import logging
-# import openai
 from openai import OpenAI
 import tiktoken
-# import pickle
-# import datetime
+import json
 
 app = FastAPI() 
 
@@ -65,5 +62,7 @@ async def token_counter_handler(request: Request):
         tokens = enc.encode(text)
     except Exception as e:
         logger.error(f"Exception: {e}\ndata: {data}")    
+    logger.info(f"tokens: {len(tokens)}")
 
-    return {"tokens": len(tokens)}
+    # return {"tokens": str(len(tokens))}
+    return Response(content=json.dumps({"tokens": len(tokens)}), media_type="application/json")
