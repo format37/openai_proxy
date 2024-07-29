@@ -28,7 +28,8 @@ async def request_handler(request: Request):
         temperature = 0.5
     
     logger.info(f"api_key: {api_key}\nmodel: {model}\ntemperature: {temperature}\nprompt: {prompt}")
-    response = text_chat_gpt(api_key, model, prompt, temperature).json()
+    # response = text_chat_gpt(api_key, model, prompt, temperature).json()
+    response = text_chat_gpt(api_key, model, prompt, temperature)
     logger.info(f"response: {response}")
     return JSONResponse(content=response)
 
