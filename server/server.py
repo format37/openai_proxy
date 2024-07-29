@@ -56,6 +56,7 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
 async def token_counter_handler(request: Request):
     data = await request.json()
     logger.info(f"token_counter data: {data}")
+    tokens = ""
     try:
         text = data['text']
         model = data['model']
@@ -63,8 +64,7 @@ async def token_counter_handler(request: Request):
         enc = tiktoken.encoding_for_model(model) 
         tokens = enc.encode(text)
     except Exception as e:
-        logger.error(f"Exception: {e}\ndata: {data}")    
+        logger.error(f"Exception: {e}")
     logger.info(f"tokens: {len(tokens)}")
 
-    # return {"tokens": str(len(tokens))}
     return Response(content=json.dumps({"tokens": len(tokens)}), media_type="application/json")
