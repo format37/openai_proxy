@@ -40,10 +40,28 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
             model=model,
             temperature=temperature
         )
-        return chat_completion
-    
+        # Extract the relevant information from the response
+        response = {
+            "id": chat_completion.id,
+            "choices": [
+                {
+                    "finish_reason": choice.finish_reason,
+                    "index": choice.index,
+                    "message": {
+                        "content": choice.message.content,
+                        "role": choice.message.role
+                    }
+                } for choice in chat_completion.choices
+            ],
+            "usage": {
+                "completion_tokens": chat_completion.usage.completion_tokens,
+                "prompt_tokens": chat_completion.usage.prompt_tokens,
+                "total_tokens": chat_completion.usage.total_tokens
+            }
+        }
+        return response
     except Exception as e:
-        return str(e)
+        return {"error": str(e)}
 
 @app.post("/token_counter")
 async def token_counter_handler(request: Request):
