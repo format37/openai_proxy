@@ -119,9 +119,12 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
         message = message.replace("```json\n", "")
         # Replace ``` with ""
         message = message.replace("```", "")
-        return JSONResponse(content=json.dumps(message), media_type="application/json")
+        # return JSONResponse(content=json.dumps(message), media_type="application/json")
+        # Return classic json
+        return message
     except Exception as e:
-        return JSONResponse(content=json.dumps({"error": str(e)}), media_type="application/json")
+        # return JSONResponse(content=json.dumps({"error": str(e)}), media_type="application/json")
+        return {"error": str(e)}
 
 @app.post("/token_counter")
 async def token_counter_handler(request: Request):
