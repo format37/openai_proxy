@@ -5,6 +5,7 @@ import logging
 from openai import OpenAI
 import tiktoken
 import json
+import pprint
 
 app = FastAPI() 
 
@@ -50,7 +51,9 @@ async def request_handler(request: Request):
     logger.info(f"api_key: {api_key}\nmodel: {model}\ntemperature: {temperature}\nprompt: {prompt}")
     response = text_chat_gpt(api_key, model, prompt, temperature)
     logger.info(f"response type: {type(response)}")
-    logger.info(f"response dumps: {json.dumps(response)}")
+    # response type: <class 'starlette.responses.JSONResponse'>
+    json_content = json.loads(response.body.decode('utf-8'))
+    logger.info(pprint.pformat(json_content, indent=2))
     return response
 
 def text_chat_gpt(api_key, model, messages, temperature=0.9):
