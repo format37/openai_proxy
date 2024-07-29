@@ -31,7 +31,7 @@ async def request_handler(request: Request):
     # response = text_chat_gpt(api_key, model, prompt, temperature).json()
     response = text_chat_gpt(api_key, model, prompt, temperature)
     logger.info(f"response: {response}")
-    return JSONResponse(content=response)
+    return JSONResponse(content=json.dumps(response), media_type="application/json")
 
 def text_chat_gpt(api_key, model, messages, temperature=0.9):
     try:
@@ -41,28 +41,12 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
             model=model,
             temperature=temperature
         )
-        # Extract the relevant information from the response
-        response = {
-            "id": chat_completion.id,
-            "choices": [
-                {
-                    "finish_reason": choice.finish_reason,
-                    "index": choice.index,
-                    "message": {
-                        "content": choice.message.content,
-                        "role": choice.message.role
-                    }
-                } for choice in chat_completion.choices
-            ],
-            "usage": {
-                "completion_tokens": chat_completion.usage.completion_tokens,
-                "prompt_tokens": chat_completion.usage.prompt_tokens,
-                "total_tokens": chat_completion.usage.total_tokens
-            }
-        }
-        return response
+        logger.info(f"chat_completion type: {type(chat_completion)}")
+        return chat_completion
     except Exception as e:
-        return {"error": str(e)}
+        # return {"error": str(e)}
+        # Return JSONResponse to avoid error in FastAPI
+        return JSONResponse(content=json.dumps({"error": str(e)}), media_type="application/json")
 
 @app.post("/token_counter")
 async def token_counter_handler(request: Request):
