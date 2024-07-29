@@ -12,6 +12,22 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def decode_unicode_json(encoded_string):
+    # First, parse the JSON string
+    parsed_json = json.loads(encoded_string)
+    
+    # If the result is a string, it might be another layer of JSON
+    if isinstance(parsed_json, str):
+        try:
+            # Try to parse it again
+            return json.loads(parsed_json)
+        except json.JSONDecodeError:
+            # If it's not valid JSON, return the string as is
+            return parsed_json
+    
+    # If it's already a dictionary or list, return it
+    return parsed_json
+
 @app.get("/test")
 async def test_handler():
     return {"test": "OK"}
@@ -53,8 +69,10 @@ async def request_handler(request: Request):
     logger.info(f"response type: {type(response)}")
     # response type: <class 'starlette.responses.JSONResponse'>
     json_content = json.loads(response.body.decode('utf-8'))
-    logger.info(pprint.pformat(json_content, indent=2))
-    return response
+    # logger.info(pprint.pformat(json_content, indent=2))
+    decoded_output = decode_unicode_json(json_content)
+    print(json.dumps(decoded_output, ensure_ascii=False, indent=2))
+    return decoded_output
 
 def text_chat_gpt(api_key, model, messages, temperature=0.9):
     try:
