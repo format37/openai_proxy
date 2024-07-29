@@ -26,8 +26,9 @@ async def request_handler(request: Request):
     try:
         temperature = float(data['temperature']) 
     except KeyError:
-        temperature = 1
-        
+        temperature = 0.5
+    
+    logger.info(f"api_key: {api_key}\nmodel: {model}\ntemperature: {temperature}\nprompt: {prompt}")
     response = text_chat_gpt(api_key, model, prompt, temperature).json()
     logger.info(f"response: {response}")
     return JSONResponse(content=response)
@@ -44,6 +45,7 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
         chat_completion = client.chat.completions.create(
             messages=messages,
             model=model,
+            temperature=temperature
         )
         return chat_completion
     
