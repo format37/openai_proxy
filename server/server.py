@@ -74,7 +74,8 @@ async def request_handler(request: Request):
     # print(json.dumps(decoded_output, ensure_ascii=False, indent=2))
     # return JSONResponse(content=json.dumps(decoded_output), media_type="application/json")
     formatted_output = json.dumps(decoded_output, ensure_ascii=False, indent=2)
-    return Response(content=formatted_output, media_type="application/json")
+    # return Response(content=formatted_output, media_type="application/json")
+    return JSONResponse(content=formatted_output, media_type="application/json")
 
 def text_chat_gpt(api_key, model, messages, temperature=0.9):
     try:
