@@ -68,7 +68,9 @@ async def request_handler(request: Request):
     response = text_chat_gpt(api_key, model, prompt, temperature)
     logger.info(f"response type: {type(response)}")
     # response type: <class 'str'>
-    return response
+    # return response
+    # Return response in JSON format
+    return JSONResponse(content=json.dumps(response), media_type="application/json")
     # json_content = json.loads(response)
     # logger.info(f"json_content type: {type(json_content)}")
     # json_content type: <class 'dict'>
