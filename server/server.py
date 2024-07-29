@@ -67,11 +67,15 @@ async def request_handler(request: Request):
     logger.info(f"api_key: {api_key}\nmodel: {model}\ntemperature: {temperature}\nprompt: {prompt}")
     response = text_chat_gpt(api_key, model, prompt, temperature)
     logger.info(f"response type: {type(response)}")
-    # response type: <class 'starlette.responses.JSONResponse'>
+    # response type: <class 'str'>
     json_content = json.loads(response)
     logger.info(f"json_content type: {type(json_content)}")
+    # json_content type: <class 'dict'>
+    
     # Log the JSON content
     logger.info(pprint.pformat(json_content, indent=2))
+    # Return as JSON
+    return JSONResponse(content=json_content, media_type="application/json")
 
     # 
     # json_content = json.loads(response.body.decode('utf-8'))
