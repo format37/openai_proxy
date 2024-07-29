@@ -75,7 +75,9 @@ async def request_handler(request: Request):
     # Log the JSON content
     logger.info(pprint.pformat(json_content, indent=2))
     # Return as JSON
-    return JSONResponse(content=json_content, media_type="application/json")
+    # return JSONResponse(content=json_content, media_type="application/json")
+    # Return JSON as string
+    return Response(content=json.dumps(json_content), media_type="application/json")
 
     # 
     # json_content = json.loads(response.body.decode('utf-8'))
