@@ -31,7 +31,8 @@ async def request_handler(request: Request):
     logger.info(f"api_key: {api_key}\nmodel: {model}\ntemperature: {temperature}\nprompt: {prompt}")
     response = text_chat_gpt(api_key, model, prompt, temperature)
     logger.info(f"response: {response}")
-    return JSONResponse(content=json.dumps(response), media_type="application/json")
+    # return JSONResponse(content=json.dumps(response), media_type="application/json")
+    return response
 
 def text_chat_gpt(api_key, model, messages, temperature=0.9):
     try:
@@ -40,31 +41,32 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
             messages=messages,
             model=model,
             temperature=temperature
-        )
+        ).json()
         logger.info(f"chat_completion type: {type(chat_completion)}")
         
         # Convert ChatCompletion to a dictionary
-        response_dict = {
-            "id": chat_completion.id,
-            "object": chat_completion.object,
-            "created": chat_completion.created,
-            "model": chat_completion.model,
-            "choices": [{
-                "index": choice.index,
-                "message": {
-                    "role": choice.message.role,
-                    "content": choice.message.content
-                },
-                "finish_reason": choice.finish_reason
-            } for choice in chat_completion.choices],
-            "usage": {
-                "prompt_tokens": chat_completion.usage.prompt_tokens,
-                "completion_tokens": chat_completion.usage.completion_tokens,
-                "total_tokens": chat_completion.usage.total_tokens
-            }
-        }
+        # response_dict = {
+        #     "id": chat_completion.id,
+        #     "object": chat_completion.object,
+        #     "created": chat_completion.created,
+        #     "model": chat_completion.model,
+        #     "choices": [{
+        #         "index": choice.index,
+        #         "message": {
+        #             "role": choice.message.role,
+        #             "content": choice.message.content
+        #         },
+        #         "finish_reason": choice.finish_reason
+        #     } for choice in chat_completion.choices],
+        #     "usage": {
+        #         "prompt_tokens": chat_completion.usage.prompt_tokens,
+        #         "completion_tokens": chat_completion.usage.completion_tokens,
+        #         "total_tokens": chat_completion.usage.total_tokens
+        #     }
+        # }
         
-        return JSONResponse(content=json.dumps(response_dict), media_type="application/json")
+        # return JSONResponse(content=json.dumps(response_dict), media_type="application/json")
+        return chat_completion
     except Exception as e:
         return JSONResponse(content=json.dumps({"error": str(e)}), media_type="application/json")
 
