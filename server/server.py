@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 import logging
@@ -35,12 +34,6 @@ async def request_handler(request: Request):
 
 def text_chat_gpt(api_key, model, messages, temperature=0.9):
     try:
-        """openai.api_key = api_key
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=prompt,
-            temperature=temperature
-        )"""
         client = OpenAI(api_key=api_key)
         chat_completion = client.chat.completions.create(
             messages=messages,
@@ -61,7 +54,13 @@ async def token_counter_handler(request: Request):
         text = data['text']
         model = data['model']
         
-        enc = tiktoken.encoding_for_model(model) 
+        try:
+            enc = tiktoken.encoding_for_model(model)
+        except KeyError:
+            # If the model is not recognized, fall back to a default encoding
+            logger.warning(f"Model {model} not recognized. Using default encoding.")
+            enc = tiktoken.get_encoding("cl100k_base")  # Default to GPT-4 encoding
+        
         tokens = enc.encode(text)
     except Exception as e:
         logger.error(f"Exception: {e}")
