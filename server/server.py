@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 import logging
@@ -63,7 +64,7 @@ def text_chat_gpt(api_key, model, messages, temperature=0.9):
             }
         }
         
-        return response_dict
+        return JSONResponse(content=json.dumps(response_dict), media_type="application/json")
     except Exception as e:
         return JSONResponse(content=json.dumps({"error": str(e)}), media_type="application/json")
 
