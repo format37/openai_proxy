@@ -77,7 +77,8 @@ async def request_handler(request: Request):
     # Return as JSON
     # return JSONResponse(content=json_content, media_type="application/json")
     # Return JSON as string
-    return Response(content=json.dumps(json_content), media_type="application/json")
+    # return Response(content=json.dumps(json_content), media_type="application/json")
+    return json_content
 
     # 
     # json_content = json.loads(response.body.decode('utf-8'))
